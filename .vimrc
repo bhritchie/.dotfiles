@@ -1,25 +1,41 @@
+execute pathogen#infect()
+call pathogen#helptags()
+
+" SETTINGS
+set numberwidth=1
+set linebreak
+set shiftround
+set nowrap
+set scrolloff=1
+set sidescrolloff=5
+set autoread
+set fileformats+=mac
 set autoindent
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 set list
 set cursorline
+
+" CUSTOM MAPPINGS
 inoremap kj <esc>
+inoremap <esc> <nop>
 let mapleader=" "
-nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <leader>w :write<cr>
+nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
+vnoremap <leader>' <esc>`<i'<esc>`>i'<esc>
+vnoremap <leader>" <esc>`<i"<esc>`>i"<esc>
+nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
+nnoremap <leader>ev :edit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
-" set backspace=2
-set backspace=indent,eol,start
-
-set hlsearch incsearch
 nnoremap <silent> <leader>/ :nohlsearch<cr>
+nnoremap H ^
+nnoremap L g_
 
+set backspace=indent,eol,start
+set hlsearch incsearch
 set clipboard=unnamed
 
-autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
+" autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
 
-
-
-
-execute pathogen#infect()
 syntax enable
 set number
 set background=dark
@@ -39,6 +55,10 @@ set hidden
 nmap <buffer> <leader>c gcc
 " Support additional filetypes
 " autocmd FileType apache set commentstring=#\ %s
+augroup commentgroup
+  autocmd!
+  autocmd FileType vim set commentstring="\ %s
+augroup END
 
 " https://github.com/airblade/vim-gitgutter
 highlight clear SignColumn
@@ -57,16 +77,11 @@ set timeoutlen=500 ttimeoutlen=0
 " let g:airline_powerline_fonts = 1
 
 set noerrorbells visualbell t_vb=
-autocmd GUIEnter * set visualbell t_vb=
+augroup bellgroup
+  autocmd!
+  autocmd GUIEnter * set visualbell t_vb=
+augroup END
 
-set numberwidth=1
-set linebreak
-set shiftround
-set nowrap
-set scrolloff=1
-set sidescrolloff=5
-set autoread
-set fileformats+=mac
 
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
   runtime! macros/matchit.vim
