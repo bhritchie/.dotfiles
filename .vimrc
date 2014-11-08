@@ -1,12 +1,35 @@
+set nocompatible
+filetype off
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'AndrewRadev/vim-eco'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'bling/vim-airline'
+Plugin 'edkolev/tmuxline.vim'
+Plugin 'gmarik/Vundle.vim'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'kien/ctrlp.vim'
+Plugin 'nelstrom/vim-visual-star-search'
+Plugin 'ntpeters/vim-better-whitespace'
+Plugin 'rking/ag.vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'thoughtbot/vim-rspec'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'tpope/vim-vinegar'
+call vundle#end()
+filetype plugin indent on
+
+
 " WISHLIST
 " Real autoloading of file
 " Fix whatever is wrong with my vim-commentary setup
 " Look into ctags - navigation and completion
-
-set nocompatible
-
-execute pathogen#infect()
-call pathogen#helptags()
 
 set nobackup
 set nowritebackup
@@ -70,7 +93,6 @@ set number
 set background=dark
 " let g:solarized_termcolors = 256
 colorscheme solarized
-filetype plugin indent on
 set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 set smarttab
 set runtimepath^=~/.vim/bundle/ctrlp.vim
@@ -150,6 +172,7 @@ let g:syntastic_echo_current_error = 1
 let g:syntastic_enable_signs = 1
 let g:syntastic_enable_balloons = 0
 let g:syntastic_enable_highlighting = 1
+let g:syntastic_check_on_opening=0
 " Example usage
 " :SyntasticInfo
 " let g:syntastic_c_checkers=['make','splint']
