@@ -1,6 +1,16 @@
+" WISHLIST
+" Real autoloading of file
+" Fix whatever is wrong with my vim-commentary setup
+" Look into ctags - navigation and completion
+
+set nocompatible
+
 execute pathogen#infect()
 call pathogen#helptags()
 
+set nobackup
+set nowritebackup
+set noswapfile
 " SETTINGS
 set numberwidth=1
 set linebreak
@@ -9,32 +19,51 @@ set nowrap
 set scrolloff=1
 set sidescrolloff=5
 set autoread
+" au FocusGained,BufEnter * :silent! !
 set fileformats+=mac
 set autoindent
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 set list
 set cursorline
+set splitbelow
+set splitright
 
 " CUSTOM MAPPINGS
-inoremap kj <esc>
-inoremap <esc> <nop>
 let mapleader=" "
+inoremap kj <esc>
+nnoremap <silent> <Up> gk
+nnoremap <silent> <Down> gj
+" inoremap <esc> <nop>
 nnoremap <leader>w :write<cr>
 nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
 vnoremap <leader>' <esc>`<i'<esc>`>i'<esc>
 vnoremap <leader>" <esc>`<i"<esc>`>i"<esc>
 nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
-nnoremap <leader>ev :edit $MYVIMRC<cr>
-nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <leader>e :edit $MYVIMRC<cr>
+nnoremap <leader>v :source $MYVIMRC<cr>
 nnoremap <silent> <leader>/ :nohlsearch<cr>
+nnoremap <leader><leader> <c-^>
 nnoremap H ^
 nnoremap L g_
+
+" CUSTOM COMMANDS
+command! BD 1,9999bd
 
 set backspace=indent,eol,start
 set hlsearch incsearch
 set clipboard=unnamed
 
 " autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
+
+"AUTOCOMMANDS
+augroup vimrc
+  autocmd!
+  autocmd FileType Bufread,BufNewFile *.md filetype=markdown
+  autocmd FileType gitcommit setlocal spell
+  autocmd FileType markdown setlocal spell
+  autocmd FileType css,scss,sass setlocal iskeyword+=
+augroup END
+
 
 syntax enable
 set number
@@ -49,10 +78,23 @@ set wildignore+=*/tmp/*
 set wildmenu
 set hidden
 
+"TAB COMPLETION
+set wildmode=list:longest,list:full
+function! InsertTabWrapper()
+  let col = col('.') - 1
+  if !col || getline('.')[col - 1] !~ '\k'
+    return "\<tab>"
+  else
+    return "\<c-p>"
+  endif
+endfunction
+inoremap <silent> <Tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <S-Tab> <c-n>
+
 " PLUGINS
 
 " https://github.com/tpope/vim-commentary
-nmap <buffer> <leader>c gcc
+nmap <leader>c gcc
 " Support additional filetypes
 " autocmd FileType apache set commentstring=#\ %s
 augroup commentgroup
@@ -75,13 +117,16 @@ set noshowmode
 set laststatus=2
 set timeoutlen=500 ttimeoutlen=0
 " let g:airline_powerline_fonts = 1
+" Enable the list of buffers
+let g:airline#extensions#tabline#enabled = 1
+" Show just the filename
+let g:airline#extensions#tabline#fnamemod = ':t'
 
 set noerrorbells visualbell t_vb=
 augroup bellgroup
   autocmd!
   autocmd GUIEnter * set visualbell t_vb=
 augroup END
-
 
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
   runtime! macros/matchit.vim
@@ -98,6 +143,22 @@ map <Leader>a :call RunAllSpecs()<CR>
 nnoremap \ :Ag<SPACE>
 let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 let g:ctrlp_use_caching = 0
+
+" https://github.com/scrooloose/syntastic
+let g:syntastic_check_on_wq = 0
+let g:syntastic_echo_current_error = 1
+let g:syntastic_enable_signs = 1
+let g:syntastic_enable_balloons = 0
+let g:syntastic_enable_highlighting = 1
+" Example usage
+" :SyntasticInfo
+" let g:syntastic_c_checkers=['make','splint']
+" let g:syntastic_ignore_files = ['\m^/usr/include/', '\m\c\.h$']
+
+" https://github.com/kien/ctrlp.vim
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_switch_buffer = 'Et'
 
 " https://github.com/edkolev/tmuxline.vim
 let g:tmuxline_preset = {

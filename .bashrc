@@ -3,6 +3,7 @@ export PATH="/usr/local/bin/:/usr/local/git/bin:$PATH:$HOME/.rvm/bin:~/bin:/Appl
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
+stty -ixon
 
 alias lsa='ls -FA'
 alias lsl='ls -FAlh'

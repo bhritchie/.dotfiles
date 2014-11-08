@@ -19,10 +19,6 @@ root: ~/dev/sandglaz
 # tmux_command: byobu
 
 windows:
-  - Vim:
-      layout: main-vertical
-      panes:
-        - vim
   - Bash:
       layout: tiled
       panes:
@@ -30,6 +26,10 @@ windows:
         - foreman start
         - #bash (tests)
         - rails console
+  - Vim:
+      layout: main-vertical
+      panes:
+        - vim
   - Scratch:
       layout: main-vertical
       panes:
