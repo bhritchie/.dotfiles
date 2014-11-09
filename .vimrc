@@ -11,6 +11,7 @@ Plugin 'edkolev/tmuxline.vim'
 Plugin 'gmarik/Vundle.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'kien/ctrlp.vim'
+Plugin 'ludovicchabant/vim-gutentags'
 Plugin 'nelstrom/vim-visual-star-search'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'rking/ag.vim'
@@ -25,16 +26,15 @@ Plugin 'tpope/vim-vinegar'
 call vundle#end()
 filetype plugin indent on
 
-
 " WISHLIST
 " Real autoloading of file
+" au FocusGained,BufEnter * :silent! !
 " Fix whatever is wrong with my vim-commentary setup
-" Look into ctags - navigation and completion
 
+" SETTINGS
 set nobackup
 set nowritebackup
 set noswapfile
-" SETTINGS
 set numberwidth=1
 set linebreak
 set shiftround
@@ -42,7 +42,6 @@ set nowrap
 set scrolloff=1
 set sidescrolloff=5
 set autoread
-" au FocusGained,BufEnter * :silent! !
 set fileformats+=mac
 set autoindent
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
@@ -50,8 +49,23 @@ set list
 set cursorline
 set splitbelow
 set splitright
+set backspace=indent,eol,start
+set hlsearch incsearch
+syntax enable
+set number
+set background=dark
+" let g:solarized_termcolors = 256
+colorscheme solarized
+set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+set smarttab
+set runtimepath^=~/.vim/bundle/ctrlp.vim
+set wildignore+=*/tmp/*
+set wildmenu
+set wildmode=list:longest,list:full
+set hidden
+" set clipboard=unnamed
 
-" CUSTOM MAPPINGS
+" MAPPINGS
 let mapleader=" "
 inoremap kj <esc>
 nnoremap <silent> <Up> gk
@@ -69,14 +83,8 @@ nnoremap <leader><leader> <c-^>
 nnoremap H ^
 nnoremap L g_
 
-" CUSTOM COMMANDS
+" COMMANDS
 command! BD 1,9999bd
-
-set backspace=indent,eol,start
-set hlsearch incsearch
-set clipboard=unnamed
-
-" autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
 
 "AUTOCOMMANDS
 augroup vimrc
@@ -85,23 +93,11 @@ augroup vimrc
   autocmd FileType gitcommit setlocal spell
   autocmd FileType markdown setlocal spell
   autocmd FileType css,scss,sass setlocal iskeyword+=
+  " autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
 augroup END
 
-
-syntax enable
-set number
-set background=dark
-" let g:solarized_termcolors = 256
-colorscheme solarized
-set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-set smarttab
-set runtimepath^=~/.vim/bundle/ctrlp.vim
-set wildignore+=*/tmp/*
-set wildmenu
-set hidden
-
-"TAB COMPLETION
-set wildmode=list:longest,list:full
+" FUNCTIONS
+" Tab invkes autocompletion except at start of line
 function! InsertTabWrapper()
   let col = col('.') - 1
   if !col || getline('.')[col - 1] !~ '\k'
@@ -143,6 +139,8 @@ set timeoutlen=500 ttimeoutlen=0
 let g:airline#extensions#tabline#enabled = 1
 " Show just the filename
 let g:airline#extensions#tabline#fnamemod = ':t'
+" Maybe put this in a section
+" set statusline+=%{autotags#statusline()}
 
 set noerrorbells visualbell t_vb=
 augroup bellgroup
@@ -191,3 +189,6 @@ let g:tmuxline_preset = {
   \ 'cwin': ['#I', '#W #F'],
   \ 'y': ['%l:%M%p'],
   \ 'z': ['%A, %B %d']}
+
+" https://github.com/ludovicchabant/vim-gutentags
+let g:gutentags_cache_dir = expand("~/.tags")
