@@ -1,5 +1,5 @@
 export PS1="\w$ "
-export PATH="/usr/local/bin/:/usr/local/git/bin:$PATH:$HOME/.rvm/bin:~/bin:/Applications/Postgres.app/Contents/Versions/9.3/bin:/Users/brendan/.rvm/gems/ruby-2.0.0-p481@sandglaz/bin:/usr/local/bin:/usr/local/heroku/bin:$HOME/.rvm/bin"
+export PATH="$HOME/dev/android-sdk-macosx/platform-tools:$HOME/dev/android-sdk-macosx/tools:/usr/local/bin/:/usr/local/git/bin:$PATH:$HOME/.rvm/bin:~/bin:/Applications/Postgres.app/Contents/Versions/9.3/bin:/Users/brendan/.rvm/gems/ruby-2.0.0-p481@sandglaz/bin:/usr/local/bin:/usr/local/heroku/bin:$HOME/.rvm/bin"
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
@@ -12,6 +12,7 @@ alias gstat='git status'
 alias gcom='git commit'
 alias glog='git log --pretty=oneline'
 alias sand='tmuxinator sandglaz'
+alias bhr='tmuxinator bhritchie'
 #cd ~/dev/sandglaz
 #alias pg='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log'
 #alias guard='bundle exec guard'

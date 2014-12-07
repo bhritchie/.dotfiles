@@ -1,0 +1,19 @@
+# ~/.tmuxinator/bhritchie.yml
+
+name: bhritchie
+root: ~/dev/bhritchie
+
+# 1943,204x58,0,0{141x58,0,0,0,62x58,142,0[62x28,142,0,2,62x29,142,29,3]}
+
+
+windows:
+  - Main:
+      layout: 1943,204x58,0,0{141x58,0,0,0,62x58,142,0[62x28,142,0,2,62x29,142,29,3]}
+      panes:
+        - vim
+        - #bash
+        - bundle exec jekyll serve
+  - Scratch:
+      layout: main-vertical
+      panes:
+        - #bash (scratch)

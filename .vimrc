@@ -1,3 +1,10 @@
+" WISHLIST
+" Real autoloading of file
+" au FocusGained,BufEnter * :silent! !
+" remove airline and bufferline, use lighter-weight buffer bar plugin and
+" configure statusline
+
+" LOAD PLUGINS {{{
 set nocompatible
 filetype off
 
@@ -6,9 +13,12 @@ call vundle#begin()
 Plugin 'AndrewRadev/vim-eco'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'altercation/vim-colors-solarized'
-Plugin 'bling/vim-airline'
-Plugin 'edkolev/tmuxline.vim'
+Plugin 'ap/vim-buftabline'
+" Plugin 'bling/vim-airline'
+Plugin 'file:///Users/Brendan/dev/no-comment'
+" Plugin 'edkolev/tmuxline.vim'
 Plugin 'gmarik/Vundle.vim'
+Plugin 'jgdavey/tslime.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'kien/ctrlp.vim'
 Plugin 'ludovicchabant/vim-gutentags'
@@ -24,16 +34,13 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'tpope/vim-vinegar'
 call vundle#end()
 filetype plugin indent on
+" }}}
 
-" WISHLIST
-" Real autoloading of file
-" au FocusGained,BufEnter * :silent! !
-" Fix whatever is wrong with my vim-commentary setup
-
-" SETTINGS
+" SETTINGS {{{
 set nobackup
 set nowritebackup
 set noswapfile
+set number
 set numberwidth=1
 set linebreak
 set shiftround
@@ -51,7 +58,6 @@ set splitright
 set backspace=indent,eol,start
 set hlsearch incsearch
 syntax enable
-set number
 set background=dark
 " let g:solarized_termcolors = 256
 colorscheme solarized
@@ -62,9 +68,11 @@ set wildignore+=*/tmp/*
 set wildmenu
 set wildmode=list:longest,list:full
 set hidden
+set ignorecase smartcase
 " set clipboard=unnamed
+" }}}
 
-" MAPPINGS
+" MAPPINGS {{{
 let mapleader=" "
 inoremap kj <esc>
 nnoremap <silent> <Up> gk
@@ -79,23 +87,33 @@ nnoremap <leader>e :edit $MYVIMRC<cr>
 nnoremap <leader>v :source $MYVIMRC<cr>
 nnoremap <silent> <leader>/ :nohlsearch<cr>
 nnoremap <leader><leader> <c-^>
+nnoremap <leader>c :NoComment<cr>
 nnoremap H ^
 nnoremap L g_
+nnoremap K :Ag "\b<C-R><C-W>\b"<CR>:cw<CR>
+" }}}
 
-" COMMANDS
+" COMMANDS {{{
 command! BD 1,9999bd
-
-"AUTOCOMMANDS
+"}}}
+"
+"AUTOCOMMANDS {{{
 augroup vimrc
   autocmd!
   autocmd FileType Bufread,BufNewFile *.md filetype=markdown
+  autocmd FileType markdown setlocal spell wrap
   autocmd FileType gitcommit setlocal spell
-  autocmd FileType markdown setlocal spell
   autocmd FileType css,scss,sass setlocal iskeyword+=
   " autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
+  autocmd Filetype vim setlocal foldmethod=marker
 augroup END
+" }}}
 
-" FUNCTIONS
+" ABBREVIATIONS {{{
+iabbrev lipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit,<cr>sed do eiusmod tempor incididunt ut labore et dolore<cr>magna aliqua. Ut enim ad minim veniam, quis nostrud<cr>exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<cr>Duis aute irure dolor in reprehenderit in voluptate velit esse<cr>cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat<cr>cupidatat non proident, sunt in culpa qui officia deserunt<cr>mollit anim id est laborum.
+" }}}
+
+" FUNCTIONS {{{
 " Tab invkes autocompletion except at start of line
 function! InsertTabWrapper()
   let col = col('.') - 1
@@ -107,17 +125,17 @@ function! InsertTabWrapper()
 endfunction
 inoremap <silent> <Tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <S-Tab> <c-n>
+" }}}
 
-" PLUGINS
+" STATUS LINE {{{
+set statusline=\ %F\ %y
+set statusline+=%=
+set statusline+=\ %l/%L\ 
 
-" https://github.com/tpope/vim-commentary
-nmap <leader>c gcc
-" Support additional filetypes
-" autocmd FileType apache set commentstring=#\ %s
-augroup commentgroup
-  autocmd!
-  autocmd FileType vim set commentstring="\ %s
-augroup END
+
+" }}}
+
+" PLUGINS SETTINGS {{{
 
 " https://github.com/airblade/vim-gitgutter
 highlight clear SignColumn
@@ -127,17 +145,17 @@ highlight GitGutterDelete ctermfg=darkred
 highlight GitGutterChangeDelete ctermfg=darkyellow
 
 " https://github.com/bling/vim-airline
-let g:airline_powerline_fonts = 1
-let g:airline_section_b="%{airline#util#wrap(airline#extensions#hunks#get_hunks(),0)}"
-let g:airline_theme="solarized"
-set noshowmode
+" let g:airline_powerline_fonts = 1
+" let g:airline_section_b="%{airline#util#wrap(airline#extensions#hunks#get_hunks(),0)}"
+" let g:airline_theme="solarized"
+" set noshowmode
 set laststatus=2
 set timeoutlen=500 ttimeoutlen=0
 " let g:airline_powerline_fonts = 1
 " Enable the list of buffers
-let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#enabled = 1
 " Show just the filename
-let g:airline#extensions#tabline#fnamemod = ':t'
+" let g:airline#extensions#tabline#fnamemod = ':t'
 " Maybe put this in a section
 " set statusline+=%{autotags#statusline()}
 
@@ -152,7 +170,7 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
 endif
 
 " https://github.com/thoughtbot/vim-rspec
-let g:rspec_command = 'call Send_to_Tmux("rspec {spec}\n")'
+let g:rspec_command = 'call Send_to_Tmux("spring rspec {spec}\n")'
 map <Leader>t :call RunCurrentSpecFile()<CR>
 map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
@@ -181,13 +199,24 @@ let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_switch_buffer = 'Et'
 
 " https://github.com/edkolev/tmuxline.vim
-let g:tmuxline_preset = {
-  \ 'a': '#S',
-  \ 'b': [' #(git rev-parse --symbolic-full-name --abbrev-ref HEAD)'],
-  \ 'win': ['#I', '#W'],
-  \ 'cwin': ['#I', '#W #F'],
-  \ 'y': ['%l:%M%p'],
-  \ 'z': ['%A, %B %d']}
+" let g:tmuxline_preset = {
+  " \ 'a': '#S',
+  " \ 'b': [' #(git rev-parse --symbolic-full-name --abbrev-ref HEAD)'],
+  " \ 'win': ['#I', '#W'],
+  " \ 'cwin': ['#I', '#W #F'],
+  " \ 'y': ['%l:%M%p'],
+  " \ 'z': ['%A, %B %d']}
 
 " https://github.com/ludovicchabant/vim-gutentags
 let g:gutentags_cache_dir = expand("~/.tags")
+
+"No Comment comment strings
+let g:no_comment_strings = {
+  \ "vim": '"',
+  \ "ruby": '#',
+  \ "coffee": '#',
+  \ "html": {"open":'<!--', "close":'-->'},
+  \ "eruby": {"open":'<!--', "close":'-->'},
+  \ "scss": '//'
+  \ }
+" }}}

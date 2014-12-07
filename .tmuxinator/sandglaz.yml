@@ -1,4 +1,4 @@
-# ~/.tmuxinator/sandglaz-dev.yml
+# ~/.tmuxinator/sandglaz.yml
 
 name: Sandglaz
 root: ~/dev/sandglaz
