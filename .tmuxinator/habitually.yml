@@ -1,0 +1,16 @@
+# ~/.tmuxinator/every-day.yml
+
+name: habitually
+root: ~/dev/habitually
+
+windows:
+  - Main:
+      layout: 1943,204x58,0,0{141x58,0,0,0,62x58,142,0[62x28,142,0,2,62x29,142,29,3]}
+      panes:
+        - nvim
+        - meteor
+        - meteor mongo
+  - Scratch:
+      layout: main-vertical
+      panes:
+        - bash (scratch)
