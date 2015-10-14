@@ -1,8 +1,6 @@
 " WISHLIST
 " Real autoloading of file
 " au FocusGained,BufEnter * :silent! !
-" remove airline and bufferline, use lighter-weight buffer bar plugin and
-" configure statusline
 
 " LOAD PLUGINS {{{
 set nocompatible
@@ -10,30 +8,32 @@ filetype off
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-Plugin 'AndrewRadev/vim-eco'
+" Plugin 'AndrewRadev/vim-eco' "\"Eco (embedded coffee-script) support for Vim\"
 Plugin 'airblade/vim-gitgutter'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'ap/vim-buftabline'
 " Plugin 'bling/vim-airline'
-Plugin 'file:///Users/Brendan/dev/no-comment'
+" Plugin 'file:///Users/Brendan/dev/no-comment'
 " Plugin 'edkolev/tmuxline.vim'
 Plugin 'gmarik/Vundle.vim'
-Plugin 'jgdavey/tslime.vim'
+Plugin 'jgdavey/tslime.vim' "\"This is a simple vim script to send portion of text from a vim buffer to a running tmux session.\"
+Plugin 'janko-m/vim-test' "\"A Vim wrapper for running tests on different granularities.\"
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'kien/ctrlp.vim'
-Plugin 'lambdatoast/elm.vim'
+" Plugin 'lambdatoast/elm.vim'
 Plugin 'ludovicchabant/vim-gutentags'
 Plugin 'nelstrom/vim-visual-star-search'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'rking/ag.vim'
 Plugin 'scrooloose/syntastic'
-Plugin 'thoughtbot/vim-rspec'
+" Plugin 'thoughtbot/vim-rspec'
 Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-haml'
+" Plugin 'tpope/vim-haml'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'tpope/vim-vinegar'
+Plugin 'tpope/vim-commentary'
 call vundle#end()
 filetype plugin indent on
 " }}}
@@ -63,7 +63,7 @@ syntax enable
 set background=dark
 " let g:solarized_termcolors = 256
 colorscheme solarized
-set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 set smarttab
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 set wildignore+=*/tmp/*
@@ -88,8 +88,9 @@ nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
 nnoremap <leader>e :edit $MYVIMRC<cr>
 nnoremap <leader>v :source $MYVIMRC<cr>
 nnoremap <silent> <leader>/ :nohlsearch<cr>
-nnoremap <leader><leader> <c-^>
-nnoremap <leader>c :NoComment<cr>
+" nnoremap <leader><leader> <c-^>
+" nnoremap <leader>c :NoComment<cr>
+nnoremap <leader>c gcc
 nnoremap H ^
 nnoremap L g_
 nnoremap K :Ag "\b<C-R><C-W>\b"<CR>:cw<CR>
@@ -108,6 +109,9 @@ augroup vimrc
   autocmd FileType css,scss,sass setlocal iskeyword+=
   " autocmd BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
   autocmd Filetype vim setlocal foldmethod=marker
+  autocmd FileType javascript setlocal foldmethod=syntax
+  autocmd FileType javascript setlocal foldlevel=99
+  autocmd FileType javascript syntax region foldBraces start=/{/ end=/}/ transparent fold keepend extend
 augroup END
 " }}}
 
@@ -172,16 +176,24 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
 endif
 
 " https://github.com/thoughtbot/vim-rspec
-let g:rspec_command = 'call Send_to_Tmux("rspec {spec}\n")'
-map <Leader>t :call RunCurrentSpecFile()<CR>
-map <Leader>s :call RunNearestSpec()<CR>
-map <Leader>l :call RunLastSpec()<CR>
-map <Leader>a :call RunAllSpecs()<CR>
+" let g:rspec_command = 'call Send_to_Tmux("rspec {spec}\n")'
+" map <Leader>t :call RunCurrentSpecFile()<CR>
+" map <Leader>s :call RunNearestSpec()<CR>
+" map <Leader>l :call RunLastSpec()<CR>
+" map <Leader>a :call RunAllSpecs()<CR>
+
+" https://github.com/janko-m/vim-test
+let test#strategy = "tslime"
+let test#javascript#mocha#executable = 'mocha'
+let test#javascript#mocha#options = '--recursive --compilers js:babel-core/register --require test/setup.js'
+nmap <silent> <leader>s :TestNearest<CR>
+nmap <silent> <leader>t :TestFile<CR>
+" nmap <silent> <leader>a :TestSuite<CR> "doesn't work - get an only one instance of babel/polyfill allowed error
+nmap <silent> <leader>l :TestLast<CR>
+nmap <silent> <leader>g :TestVisit<CR>
 
 " https://github.com/rking/ag.vim
 nnoremap \ :Ag<SPACE>
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-let g:ctrlp_use_caching = 0
 
 " https://github.com/scrooloose/syntastic
 let g:syntastic_check_on_wq = 0
@@ -190,15 +202,20 @@ let g:syntastic_enable_signs = 1
 let g:syntastic_enable_balloons = 0
 let g:syntastic_enable_highlighting = 1
 let g:syntastic_check_on_opening=0
+let g:syntastic_javascript_checkers = ['eslint']
 " Example usage
 " :SyntasticInfo
 " let g:syntastic_c_checkers=['make','splint']
-" let g:syntastic_ignore_files = ['\m^/usr/include/', '\m\c\.h$']
+"confirmationMessage let g:syntastic_ignore_files = ['\m^/usr/include/', '\m\c\.h$']
 
 " https://github.com/kien/ctrlp.vim
+let g:ctrlp_user_command = 'ag %s -l --hidden --nocolor -g ""'
+let g:ctrlp_use_caching = 0 " only usable with Ag - see note on conflict with dotfiles below
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_switch_buffer = 'Et'
+" let g:ctrlp_show_hidden = 1 " doesn't work with ctrlp_user_command
+" let g:ctrlp_switch_buffer = 0 " open files in new buffer
 
 " https://github.com/edkolev/tmuxline.vim
 " let g:tmuxline_preset = {

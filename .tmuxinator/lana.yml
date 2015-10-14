@@ -1,0 +1,66 @@
+# ~/.tmuxinator/lana.yml
+
+name: lana-client
+root: ~/dev/lana-client
+
+# Optional tmux socket
+# socket_name: foo
+
+# Runs before everything. Use it to start daemons etc.
+# pre: sudo /etc/rc.d/mysqld start
+
+# Runs in each window and pane before window/pane specific commands. Useful for setting up interpreter versions.
+# pre_window: rbenv shell 2.0.0-p247
+
+# Pass command line options to tmux. Useful for specifying a different tmux.conf.
+# tmux_options: -f ~/.tmux.mac.conf
+
+# Change the command to call tmux.  This can be used by derivatives/wrappers like byobu.
+# tmux_command: byobu
+
+#preset layouts are:
+
+# even-horizontal
+#              Panes are spread out evenly from left to right across the window.
+
+#      even-vertical
+#              Panes are spread evenly from top to bottom.
+
+#      main-horizontal
+#              A large (main) pane is shown at the top of the window and the
+#              remaining panes are spread from left to right in the leftover
+#              space at the bottom.  Use the main-pane-height window option to
+#              specify the height of the top pane.
+
+#      main-vertical
+#              Similar to main-horizontal but the large pane is placed on the
+#              left and the others spread from top to bottom along the right.
+#              See the main-pane-width window option.
+
+#      tiled   Panes are spread out as evenly as possible over the window in
+#              both rows and columns.
+
+#LINTING?
+
+windows:
+  - Bash:
+      layout: tiled
+      panes:
+        - git status
+        - npm run start
+        - npm run test
+        - babel-node
+  - Vim:
+      layout: tiled
+      panes:
+        - nvim
+  - Server:
+      root: ~/dev/resolver-dev-all
+      layout: even-horizontal
+      panes:
+        - ./run.sh
+        - # bash
+  - Scratch:
+      layout: tiled
+      panes:
+        - # bash
