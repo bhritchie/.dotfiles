@@ -71,6 +71,7 @@ set wildmenu
 set wildmode=list:longest,list:full
 set hidden
 set ignorecase smartcase
+set spelllang=en_ca
 " set clipboard=unnamed
 " }}}
 
@@ -94,6 +95,10 @@ nnoremap <leader>c gcc
 nnoremap H ^
 nnoremap L g_
 nnoremap K :Ag "\b<C-R><C-W>\b"<CR>:cw<CR>
+
+" SOME INTERESTING POSSIBILITIES
+" nnoremap gV `[v`] " highlight last inserted text
+" nnoremap <leader>s :mksession<CR> " save session (have to remap, I already use s
 " }}}
 
 " COMMANDS {{{
@@ -112,6 +117,14 @@ augroup vimrc
   autocmd FileType javascript setlocal foldmethod=syntax
   autocmd FileType javascript setlocal foldlevel=99
   autocmd FileType javascript syntax region foldBraces start=/{/ end=/}/ transparent fold keepend extend
+augroup END
+
+augroup javascript
+  autocmd!
+  "autocmd FileType javascript setlocal ...
+  " autocmd FileType javascript setlocal syntax region foldBraces start=/{/ end=/}/ transparent fold keepend extend
+  autocmd FileType javascript setlocal foldmethod=syntax
+  " autocmd FileType javascript setlocal syntax=javaScript
 augroup END
 " }}}
 
@@ -134,9 +147,9 @@ inoremap <S-Tab> <c-n>
 " }}}
 
 " STATUS LINE {{{
-set statusline=\ %F\ %y
-set statusline+=%=
-set statusline+=\ %l/%L\ 
+set statusline=\ %F\ %y "filename and filetype
+set statusline+=%= "swith to right side
+set statusline+=\ %l/%L\ "current line/total lines
 
 
 " }}}
