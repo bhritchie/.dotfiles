@@ -1,7 +1,7 @@
 #export PS1="\w\$ "
 PS1="\[\033[1;34m\]\w\$\[\033[0m\] "
-export PATH="$HOME/mongodb/bin:$HOME/dev/android-sdk-macosx/platform-tools:$HOME/dev/android-sdk-macosx/tools:/usr/local/bin/:/usr/local/git/bin:$PATH:$HOME/.rvm/bin:~/bin:/Applications/Postgres.app/Contents/Versions/9.3/bin:/Users/brendan/.rvm/gems/ruby-2.0.0-p481@sandglaz/bin:/usr/local/bin:/usr/local/heroku/bin:$HOME/.rvm/bin:$HOME/dev/android-sdk-macosx/build-tools/21.1.1:$HOME/npm/bin:$PATH:/Applications/Postgres.app/Contents/Versions/9.4/bin"
-
+export PATH="/usr/local/Cellar/vim/7.4.1832/bin/:/Users/Ritchie/npm/bin/:$HOME/mongodb/bin:$HOME/dev/android-sdk-macosx/platform-tools:$HOME/dev/android-sdk-macosx/tools:/usr/local/bin/:/usr/local/git/bin:$PATH:$HOME/.rvm/bin:~/bin:/Applications/Postgres.app/Contents/Versions/9.3/bin:/Users/brendan/.rvm/gems/ruby-2.0.0-p481@sandglaz/bin:/usr/local/bin:/usr/local/heroku/bin:$HOME/.rvm/bin:$HOME/dev/android-sdk-macosx/build-tools/21.1.1:$HOME/npm/bin:$PATH:/Applications/Postgres.app/Contents/Versions/9.4/bin"
+export ANDROID_HOME=/usr/local/opt/android-sdk
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 stty -ixon
@@ -19,6 +19,7 @@ alias gcom='git commit'
 alias glog='git log --pretty=oneline'
 alias gch='git checkout'
 alias gf='git flow'
+alias grecent="git for-each-ref --sort='authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads"
 alias sand='tmuxinator sandglaz'
 alias lana='tmuxinator lana'
 alias bhr='tmuxinator bhritchie'
@@ -37,3 +38,5 @@ export GIT_EDITOR='vim +startinsert'
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+
+export GOPATH=$HOME/dev/sandbox/go

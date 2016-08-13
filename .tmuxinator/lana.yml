@@ -1,7 +1,7 @@
 # ~/.tmuxinator/lana.yml
 
 name: lana-client
-root: ~/dev/lana-client
+root: /Volumes/Development/lana-client
 
 # Optional tmux socket
 # socket_name: foo
@@ -55,11 +55,11 @@ windows:
       panes:
         - nvim
   - Server:
-      root: ~/dev/resolver-dev-all
-      layout: even-horizontal
+      root: /Volumes/Development/resolver-dev-all
+      layout: even-vertical
       panes:
         - ./run.sh
-        - # bash
+        - psql postgresql://localhost/postgres
   - Scratch:
       layout: tiled
       panes:
