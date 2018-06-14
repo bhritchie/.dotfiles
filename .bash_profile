@@ -1,3 +1,4 @@
+source ~/.profile
 [[ -s "$HOME/.profile" ]] && source "$HOME/.profile" # Load the default .profile
 
 [[ -s "$HOME/.bashrc" ]] && source "$HOME/.bashrc"
@@ -20,3 +21,7 @@ export PATH
 
 # OPAM configuration
 . /Users/Ritchie/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+
+
+# load rslv config
+source ~/.rslv/.rslvrc

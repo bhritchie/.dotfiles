@@ -26,10 +26,13 @@ Plugin 'ctrlpvim/ctrlp.vim'
 " Plugin 'nelstrom/vim-visual-star-search'
 " Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'rking/ag.vim'
-Plugin 'scrooloose/syntastic'
-Plugin 'mtscout6/syntastic-local-eslint.vim'
+" Plugin 'scrooloose/syntastic'
+" Plugin 'mtscout6/syntastic-local-eslint.vim'
+Plugin 'neomake/neomake'
+" Plugin 'ryyppy/flow-vim-quickfix'
+Plugin 'benjie/neomake-local-eslint.vim'
 " Plugin 'thoughtbot/vim-rspec'
-" Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-fugitive'
 " Plugin 'tpope/vim-haml'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
@@ -43,6 +46,8 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
 Plugin 'godlygeek/tabular'
 Plugin 'bhritchie/vim-toggle-case'
+" Plugin 'flowtype/vim-flow'
+Plugin 'fatih/vim-go'
 call vundle#end()
 filetype plugin indent on
 " }}}
@@ -90,6 +95,7 @@ set conceallevel=1
 " MAPPINGS {{{
 let mapleader=" "
 inoremap kj <esc>
+inoremap jk <esc>
 nnoremap <silent> <Up> gk
 nnoremap <silent> <Down> gj
 " inoremap <esc> <nop>
@@ -140,6 +146,7 @@ augroup vimrc
   autocmd FileType javascript setlocal foldmethod=syntax
   autocmd FileType javascript setlocal foldlevel=99
   autocmd FileType javascript syntax region foldBraces start=/{/ end=/}/ transparent fold keepend extend
+  autocmd! BufWritePost * Neomake
 augroup END
 
 augroup javascript
@@ -214,6 +221,59 @@ set statusline+=\ %l/%L\ "current line/total lines
 " }}}
 
 " PLUGINS SETTINGS {{{
+"
+" NEOMAKE
+
+function! StrTrim(txt)
+  return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+endfunction
+
+let g:neomake_javascript_enabled_makers = []
+
+let g:flow_path = StrTrim(system('PATH=$(npm bin):$PATH && which flow'))
+
+if findfile('.flowconfig', '.;') !=# ''
+  let g:flow_path = StrTrim(system('PATH=$(npm bin):$PATH && which flow'))
+  " let g:flow_path = StrTrim(system('which flow'))
+  if g:flow_path != 'flow not found'
+    let g:neomake_javascript_flow_maker = {
+          \ 'exe': 'sh',
+          \ 'args': ['-c', g:flow_path.' --json 2> /dev/null | flow-vim-quickfix'],
+          \ 'errorformat': '%E%f:%l:%c\,%n: %m',
+          \ 'cwd': '%:p:h' 
+          \ }
+    let g:neomake_javascript_enabled_makers = g:neomake_javascript_enabled_makers + [ 'flow']
+  endif
+endif
+
+" This is kinda useful to prevent Neomake from unnecessary runs
+" if !empty(g:neomake_javascript_enabled_makers)
+"   autocmd! BufWritePost * Neomake
+" endif
+
+function! FlowArgs()
+  let g:file_path = expand('%:p')
+    return ['-c', g:flow_path.' check-contents '.g:file_path.' < '.g:file_path.' --json | flow-vim-quickfix']
+endfunction
+let g:flow_maker = {
+\ 'exe': 'sh',
+\ 'args': function('FlowArgs'),
+\ 'errorformat': '%E%f:%l:%c\,%n: %m',
+\ 'cwd': '%:p:h'
+\ }
+let g:neomake_warning_sign = {
+\ 'text': 'W',
+\ 'texthl': 'WarningMsg',
+\ }
+let g:neomake_error_sign = {
+\ 'text': 'E',
+\ 'texthl': 'ErrorMsg',
+\ }
+let g:makers = ['eslint', 'flow']
+let g:neomake_javascript_enabled_makers = g:makers
+let g:neomake_jsx_enabled_makers = g:makers
+let g:neomake_javascript_flow_maker = g:flow_maker
+let g:neomake_jsx_flow_maker = g:flow_maker
 
 " https://github.com/airblade/vim-gitgutter
 highlight clear SignColumn
@@ -268,15 +328,16 @@ endif
 nnoremap \ :Ag<SPACE>
 
 " https://github.com/scrooloose/syntastic
-let g:syntastic_check_on_wq = 0
-let g:syntastic_echo_current_error = 1
-let g:syntastic_enable_signs = 1
-let g:syntastic_enable_balloons = 0
-let g:syntastic_enable_highlighting = 1
-let g:syntastic_check_on_opening=0
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_c_pc_lint_args = '--ext .js --ext .jsx'
-let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_echo_current_error = 1
+" let g:syntastic_enable_signs = 1
+" let g:syntastic_enable_balloons = 0
+" let g:syntastic_enable_highlighting = 1
+" let g:syntastic_check_on_opening=0
+" let g:syntastic_javascript_checkers = ['eslint', 'flow']
+" let g:syntastic_javascript_flow_exe = 'flow'
+" let g:syntastic_c_pc_lint_args = '--ext .js --ext .jsx'
+" let g:syntastic_always_populate_loc_list = 1
 " Example usage
 " :SyntasticInfo
 " let g:syntastic_c_checkers=['make','splint']

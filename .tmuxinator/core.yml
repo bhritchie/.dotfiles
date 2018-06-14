@@ -1,7 +1,7 @@
 # ~/.tmuxinator/lana.yml
 
-name: lana-client
-root: /Volumes/Development/lana-client
+name: CORE
+root: ~/resolver
 
 # Optional tmux socket
 # socket_name: foo
@@ -46,39 +46,19 @@ windows:
   - Bash:
       layout: tiled
       panes:
-        - git status
-        - npm run start
-        - npm run test
-        - babel-node
+        - rslv
+        - cd core-client && git status
+        - rslv services:logs
+        - cd core-services && git status
   - Vim:
       layout: tiled
       panes:
         - nvim
-  - Server:
-      root: /Volumes/Development/resolver-dev-all
-      layout: even-vertical
+  - Scratch 1:
+      layout: tiled
       panes:
-        - ./run.sh
-        - psql postgresql://localhost/postgres
-  - Object Service:
-      root: /Volumes/Development/resolver-dev-all/resolver-object-service
-      layout: even-horizontal
-      panes:
-        - git status
-        - npm start
-  - Data Service:
-      root: /Volumes/Development/resolver-dev-all/resolver-data-service
-      layout: even-horizontal
-      panes:
-        - git status
-        - npm start
-  - User Service:
-      root: /Volumes/Development/resolver-dev-all/resolver-user-service
-      layout: even-horizontal
-      panes:
-        - git status
-        - npm start
-  - Scratch:
+        - # bash
+  - Scratch 2:
       layout: tiled
       panes:
         - # bash
